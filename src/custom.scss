@@ -1,0 +1,62 @@
+// Override default bootstrap variables
+$theme-colors: (
+    "primary": #0c416f,
+    "secondary": #5d5a88,
+    "light": #ffffff,
+    "dark": #0c416f
+);
+
+.container {
+    max-width: 1280px !important;
+}
+
+.hero {
+    color: map-get($theme-colors, "secondary");
+    padding: 0px 0;
+    padding-top: 200px;
+    position: fixed;
+    width: 100%;
+}
+
+.hero h1 {
+    font-size: 56px;
+    font-weight: 500;
+    margin-bottom: 80px;
+    color: map-get($theme-colors, "secondary");
+}
+
+.hero h2 {
+    font-size: 56px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.request-demo.btn.btn-outline-primary {
+    background-color: map-get($theme-colors, "secondary");
+    color: #ffffff;
+    border-color: map-get($theme-colors, "secondary");
+    border-radius: 0px;
+    padding: 8px 18px;
+    transition: all 0.3s ease-in-out;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.request-demo.btn.btn-outline-primary:hover {
+    background-color: #ffffff;
+    color: #0c416f;
+    border-color: #0c416f;
+    transform: scale(1.05);
+}
+
+.request-demo.btn.btn-outline-primary:active {
+    background-color: #0c416f;
+    color: #ffffff;
+    border-color: #0c416f;
+    transform: scale(0.95);
+}
+
+
+
+// Import Bootstrap after overrides
+@import "bootstrap/scss/bootstrap";
