@@ -86,7 +86,10 @@ html {
 .header-detail-box {
   text-align: left;
   max-width: 740px;
-  background-color: #606060 !important;
+  /* background-color: #606060 !important; */
+}
+.header-detail-box .bg-box {
+  background-color: rgba(0, 0, 0, 0.6);
   color: #ffffff;
   padding: 30px;
   border-radius: 10px;
@@ -672,6 +675,7 @@ html {
   transition: all 0.3s ease-in-out;
   width: 100%;
   text-align: left;
+  display: block !important;
 }
 .dropdown-menu.show .dropdown-item:hover {
   background-color: #5d5a88;
@@ -1001,7 +1005,7 @@ html {
 }
 .nav-link {
   color: #5d5a88 !important;
-  font-size: 16px !important;
+  font-size: 18px !important;
   font-weight: 500 !important;
   line-height: 1.6 !important;
 }

@@ -1,0 +1,305 @@
+/* Responsive Styles */
+@media (max-width: 1200px) {
+  .bg-body-tertiary {
+    padding: 10px 0px !important;
+  }
+  .hero {
+    padding-top: 120px !important;
+  }
+  .hero h1,
+  .hero .h2 {
+    font-size: 36px !important;
+    margin-bottom: 30px !important;
+  }
+  .hero h2 {
+    font-size: 36px !important;
+  }
+  .scrollaway {
+    height: 330px;
+  }
+  .header-detail-box h3 {
+    font-size: 18px !important;
+  }
+  .message-message {
+    padding: 52px 44px;
+    margin-top: -98px;
+  }
+  .message__details {
+    font-size: 18px;
+  }
+  .stats h2 {
+    font-size: 34px !important;
+  }
+  .stats-item h3 {
+    font-size: 30px !important;
+  }
+  .stats strong {
+    font-size: 16px;
+  }
+  .video-section .top-header h2 {
+    font-size: 34px;
+  }
+  .video-section .top-header p {
+    font-size: 14px;
+  }
+  .video-section .bottom-header h3 {
+    font-size: 20px;
+  }
+  .video-section .bottom-header p {
+    font-size: 14px;
+  }
+  .graph-section h2 {
+    font-size: 34px;
+  }
+  .graph-section p {
+    font-size: 14px;
+  }
+  .footer a {
+    font-size: 16px;
+  }
+  .footer p {
+    font-size: 16px;
+  }
+  .contact-form-container h2 {
+    font-size: 34px;
+  }
+  .contact-form-container p {
+    font-size: 14px;
+  }
+  .contact-form-container form .form-group textarea::placeholder,
+  .contact-form-container form .form-group input::placeholder {
+    font-size: 14px;
+  }
+  .contact-form-container form button {
+    font-size: 14px;
+  }
+  .contact-form-container form .form-group textarea {
+    font-size: 14px;
+  }
+  .about-hero {
+    padding: 40px 0;
+  }
+}
+@media (max-width: 768px) {
+  .scrollaway {
+    height: 370px;
+  }
+  .message-message {
+    padding: 35px 30px;
+    margin-top: -183px;
+    margin-bottom: 50px;
+  }
+  .media {
+    clip-path: none;
+  }
+  .hero h1,
+  .hero .h2 {
+    font-size: 30px !important;
+  }
+  .hero h2 {
+    font-size: 30px !important;
+  }
+  .stats h2 {
+    font-size: 24px !important;
+  }
+  .stats-item h3 {
+    font-size: 24px !important;
+  }
+  .stats strong {
+    font-size: 14px !important;
+  }
+  .video-section .top-header h2 {
+    font-size: 24px !important;
+  }
+  .video-section .top-header p {
+    font-size: 12px !important;
+  }
+  .video-section .bottom-header h3 {
+    font-size: 16px !important;
+    margin-top: 30px !important;
+  }
+  .video-section .bottom-header p {
+    font-size: 12px !important;
+  }
+  .graph-section h2 {
+    font-size: 24px !important;
+  }
+  .graph-section p {
+    font-size: 12px !important;
+  }
+  .footer a {
+    font-size: 14px !important;
+  }
+  .footer p {
+    font-size: 14px !important;
+  }
+  .contact-form-container h2 {
+    font-size: 24px !important;
+  }
+  .contact-form-container p {
+    font-size: 12px !important;
+  }
+  .contact-form-container form .form-group textarea::placeholder,
+  .contact-form-container form .form-group input::placeholder {
+    font-size: 12px !important;
+  }
+  .contact-form-container form button {
+    font-size: 12px !important;
+  }
+  .contact-form-container form .form-group textarea {
+    font-size: 12px !important;
+  }
+  .graph-section {
+    padding: 40px 0;
+    background-color: #f0f0f0;
+  }
+  .stats {
+    padding-bottom: 40px;
+  }
+  .video-section {
+    padding: 40px 0;
+  }
+  .video-section .top-header h2 {
+    font-size: 20px !important;
+  }
+  .video-section .top-header p {
+    font-size: 10px !important;
+  }
+  .margin-bottom {
+    margin-bottom: 10px !important;
+  }
+  .reverse-xs-order-1 {
+    order: 1 !important;
+  }
+  .reverse-xs-order-2 {
+    order: 2 !important;
+  }
+  .video-section video {
+    margin-bottom: 20px !important;
+  }
+  .contact-form {
+    padding: 40px 0;
+  }
+  .contact-form-container {
+    padding: 40px 25px;
+  }
+  .contact-form-container form .form-group label {
+    font-size: 16px;
+  }
+  .contact-form-container form .form-group input,
+  .contact-form-container form .form-group textarea {
+    padding: 15px 26px;
+  }
+  .position-relative > i {
+    margin: 3px !important;
+  }
+  .contact-form-container form .form-group input#phone {
+    padding-left: 54px !important;
+  }
+  .contact-form-container form {
+    gap: 10px;
+  }
+  .contact-form-container form button {
+    width: 144px;
+    padding: 16px;
+  }
+  .footer-logo {
+    display: block;
+    text-align: center;
+  }
+  .footer a {
+    display: block;
+    margin: 10px;
+  }
+  .stats p {
+    margin-bottom: 20px;
+  }
+  .video-section .bottom-header p {
+    margin-bottom: 0px;
+  }
+  .about-hero .right-content {
+    order: 2 !important;
+    padding-right: 0px;
+  }
+  .about-hero .left-content {
+    order: 1 !important;
+    padding-right: inherit !important;
+    margin-bottom: 25px;
+  }
+  .about-hero h1 {
+    font-size: 30px !important;
+  }
+  .about-details {
+    padding: 40px 0;
+  }
+  .about-details h2 {
+    font-size: 30px !important;
+  }
+  .about-details p {
+    font-size: 15px !important;
+  }
+  .about-intelligence {
+    padding: 40px 0;
+  }
+  .about-intelligence h2 {
+    font-size: 30px !important;
+  }
+  .about-intelligence p {
+    font-size: 15px !important;
+  }
+  .about-details .left-content {
+    padding-right: 0px;
+  }
+  .about-details .right-content {
+    order: 1 !important;
+    margin-bottom: 15px;
+  }
+  .about-details .left-content {
+    order: 2 !important;
+  }
+  .about-intelligence .left-content {
+    padding-right: 0px;
+  }
+  .about-intelligence .right-content {
+    padding-left: 0px;
+  }
+  .about-intelligence h2.box-title {
+    margin-bottom: 40px;
+    margin-top: 60px;
+    text-align: left;
+  }
+  .box-row .box .bg {
+    padding: 20px 35px;
+  }
+  .box-row .box .bg img {
+    height: 30px;
+    width: 30px;
+  }
+  .box-row .box .bg p {
+    font-size: 14px;
+  }
+  .box-title {
+    font-size: 20px;
+  }
+  .box-row {
+    display: block;
+    margin-bottom: 0px;
+  }
+  .box-row .box {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .box-row:last-child .box:last-child {
+    margin-bottom: 0px;
+  }
+  .box-row .box .bg {
+    padding: 20px 35px;
+  }
+  .box-row .box .bg img {
+    height: 30px;
+    width: 30px;
+  }
+  .box-row .box .bg p {
+    font-size: 14px;
+  }
+}

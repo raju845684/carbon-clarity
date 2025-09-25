@@ -14,7 +14,7 @@ import "flag-icons/css/flag-icons.min.css";
 // Comprehensive list of country codes with names and dial codes
 const getCountryList = () => {
   return [
-    { code: "US", name: "United States", dialCode: "+1" },
+    { code: "US", name: "USA", dialCode: "+1" },
     { code: "CA", name: "Canada", dialCode: "+1" },
     { code: "GB", name: "United Kingdom", dialCode: "+44" },
     { code: "AU", name: "Australia", dialCode: "+61" },
@@ -223,7 +223,6 @@ const ContactForm = () => {
     company: "",
     message: "",
   });
-console.log(formData);
   const [errors, setErrors] = useState({});
 
   // Memoize country list to prevent unnecessary re-renders
@@ -414,8 +413,8 @@ console.log(formData);
     <div className="contact-form" id="request-demo">
       <div className="container">
         <div className="row">
-          <div className="col-4"></div>
-          <div className="col-8">
+          <div className="col-md-4 col-sm-12 col-xs-12"></div>
+          <div className="col-md-8 col-sm-12 col-xs-12">
             <div className="contact-form-container">
               <h2>Schedule a demo</h2>
               <p>
@@ -425,7 +424,7 @@ console.log(formData);
               </p>
               <form onSubmit={handleSubmit}>
                 <div className="row">
-                  <div className="col-6">
+                  <div className="col-md-6 col-sm-12 col-xs-12">
                     <div className="form-group">
                       <label htmlFor="name">Name</label>
                       <input
@@ -443,7 +442,7 @@ console.log(formData);
                       )}
                     </div>
                   </div>
-                  <div className="col-6">
+                  <div className="col-md-6 col-sm-12 col-xs-12">
                     <div className="form-group">
                       <label htmlFor="email">Email</label>
                       <input
@@ -463,7 +462,7 @@ console.log(formData);
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-6">
+                  <div className="col-md-6 col-sm-12 col-xs-12">
                     <div
                       className="form-group phone-input-container position-relative"
                       ref={dropdownRef}
@@ -486,7 +485,6 @@ console.log(formData);
                           labels={en}
                           countries={countryList.map((c) => c.code)}
                           country={country}
-                          onCountryChange={handleCountryChange}
                           international
                           withCountryCallingCode
                           value={formData.phone}
@@ -508,7 +506,7 @@ console.log(formData);
                             zIndex: 1000,
                           }}
                         >
-                      <input
+                          <input
                             type="text"
                             className="form-control mb-2"
                             placeholder="Search countries..."
@@ -525,8 +523,8 @@ console.log(formData);
                                 className={`fi fi-${c.code.toLowerCase()} mr-2`}
                               ></i>
                               <span className="ml-auto text-muted">
-                                {c.dialCode} 
-                              </span> 
+                                {c.dialCode}
+                              </span>
                               <span className="ml-auto">{c.name}</span>
                             </button>
                           ))}
@@ -537,7 +535,7 @@ console.log(formData);
                       )}
                     </div>
                   </div>
-                  <div className="col-6">
+                  <div className="col-md-6 col-sm-12 col-xs-12">
                     <div className="form-group">
                       <label htmlFor="company">Company</label>
                       <input
@@ -556,7 +554,7 @@ console.log(formData);
                     </div>
                   </div>
                 </div>
-                <div className="form-group">
+                <div className="form-group col-md-12 col-sm-12 col-xs-12">
                   <label htmlFor="message">Leave us a message</label>
                   <textarea
                     className={`form-control ${

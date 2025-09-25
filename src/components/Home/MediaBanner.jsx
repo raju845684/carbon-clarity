@@ -45,8 +45,20 @@ const MediaBanner = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollTop]);
 
-  // Background transform
-  const backgroundTransform = scrollProgress > 0.1 ? "scale(1.15)" : "scale(1)";
+  // Dynamic background transform - gradual scale increase based on scroll progress
+  const calculateBackgroundScale = () => {
+    if (scrollProgress <= 0) {
+      return "scale(1)"; // Start at scale(1)
+    } else if (scrollProgress >= 1) {
+      return "scale(1.15)"; // Max scale at full scroll
+    } else {
+      // Gradual scale increase from 1 to 1.15
+      const scaleValue = 1 + scrollProgress * 0.15; // 0.15 = 1.15 - 1
+      return `scale(${scaleValue.toFixed(5)})`; // 5 decimal places for precision
+    }
+  };
+
+  const backgroundTransform = calculateBackgroundScale();
 
   // Individual transform for each box
   const box1Transform = `translateY(${-scrollProgress * 100}vh)`; // Box 1 moves up
@@ -125,10 +137,13 @@ const MediaBanner = () => {
   const secondBoxOpacity = calculateIndividualOpacity(1);
 
   // Fixed container height - no dynamic calculation based on scroll
-  const containerHeight = `calc(100vh + 100vh + 200vh)`; // Fixed height: 100vh + 100vh for box offset + 200vh for scroll distance
+  const containerHeight = `calc(100vh + 100vh + 80vh)`; // Fixed height: 100vh + 100vh for box offset + 200vh for scroll distance
 
   return (
-    <div className="media-banner-container" style={{ minHeight: containerHeight }}>
+    <div
+      className="media-banner-container"
+      style={{ minHeight: containerHeight }}
+    >
       {/* Fixed Background Media Section */}
       <div ref={mediaRef} className="media" id="media">
         <div
@@ -136,7 +151,8 @@ const MediaBanner = () => {
           className="media-backgroundMask"
           style={{
             transform: backgroundTransform,
-            transition: "transform 0.1s ease-out",
+            transition: "transform 100ms",
+            // transition: "transform 0.1s ease-out",
           }}
         />
       </div>
@@ -155,12 +171,16 @@ const MediaBanner = () => {
                   transition: "opacity 0.3s ease-out, transform 0.3s ease-out",
                 }}
               >
-                <h3>
-                  Fueled by the growth of AI, global electricity usage from data
-                  centers is set to more than double over the next five years
-                </h3>
+                <div className="bg-box">
+                  <h3>
+                    Fueled by the growth of AI, global electricity usage from
+                    data centers is set to more than double over the next five
+                    years. 30% of AI compute resources are wasted on inefficient
+                    model operations.
+                  </h3>
+                </div>
               </div>
-              <div
+              {/* <div
                 ref={(el) => (headerDetailsRefs.current[1] = el)}
                 className="header-detail-box box-2"
                 style={{
@@ -172,7 +192,7 @@ const MediaBanner = () => {
                 <h3>
                   4.4% of all the energy in the US now goes toward data centers.
                 </h3>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

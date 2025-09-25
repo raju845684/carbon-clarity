@@ -32,7 +32,7 @@ const VideoSection = () => {
     <div className="video-section">
       <div className="container">
         <div className="row">
-          <div className="col-8 top-header">
+          <div className="col-md-8 col-sm-12 col-xs-12 top-header">
             <h4>Amet minim mollit</h4>
             <h2>A fundamental shift in the power grid is happening</h2>
             <p>
@@ -43,8 +43,8 @@ const VideoSection = () => {
               link between their models and the energy they consume.
             </p>
           </div>
-          <div className="col-4"></div>
-          <div className="col-8">
+          <div className="col-md-4 col-sm-12 col-xs-12"></div>
+          <div className="col-md-8 col-sm-12 col-xs-12">
             <video
               src={"https://carbonclarity.ai/assets/videos/datacenter_1.mp4"}
               autoPlay
@@ -52,7 +52,7 @@ const VideoSection = () => {
               muted
             />
           </div>
-          <div className="col-4 bottom-header">
+          <div className="col-md-4 col-sm-12 col-xs-12 bottom-header">
             <h3>Model Energy Monitor</h3>
             <p>
               AI models are driving a surge in data-center demand - but most
@@ -71,8 +71,11 @@ const VideoSection = () => {
               Play
             </button> */}
           </div>
-          <div className="col-12" style={{ marginBottom: "120px" }}></div>
-          <div className="col-4 bottom-header">
+          <div
+            className="col-12 col-md-12 col-sm-12 col-xs-12 margin-bottom"
+            style={{ marginBottom: "120px" }}
+          ></div>
+          <div className="col-md-4 col-sm-12 col-xs-12 bottom-header reverse-xs-order-2">
             <h3>Model Energy Monitor</h3>
             <p>
               AI models are driving a surge in data-center demand - but most
@@ -91,7 +94,7 @@ const VideoSection = () => {
               Play
             </button> */}
           </div>
-          <div className="col-8">
+          <div className="col-md-8 col-sm-12 col-xs-12 reverse-xs-order-1">
             <video
               src={"https://carbonclarity.ai/assets/videos/datacenter_2.mp4"}
               autoPlay

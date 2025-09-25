@@ -12,7 +12,7 @@ const Stats = () => {
     <div className="stats" id="stats" ref={ref}>
       <div className="container">
         <div className="row">
-          <div className="col-9">
+          <div className="col-md-9 col-sm-12 col-xs-12 stats-content">
             <h2>
               Our Model Energy Monitor equips teams to observe, optimize, and
               report per-model energy usage - ensuring transparency, efficiency,
