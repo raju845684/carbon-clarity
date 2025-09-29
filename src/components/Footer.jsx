@@ -39,7 +39,7 @@ const Footer = () => {
           <div className="col-12">
             <div className="footer-logo">
               <img src={logoWhite} alt="logo" />
-              <a href="#" onClick={(e) => { e.preventDefault(); handleContactUs(); }}>Contact Us</a>
+              <a href="mailto:admin@carbonclarity.ai">Contact Us</a>
               <p>&copy; All rights Reserved 2025</p>
             </div>
           </div>

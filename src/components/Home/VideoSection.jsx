@@ -75,7 +75,7 @@ const VideoSection = () => {
             className="col-12 col-md-12 col-sm-12 col-xs-12 margin-bottom"
             style={{ marginBottom: "120px" }}
           ></div>
-          <div className="col-md-4 col-sm-12 col-xs-12 bottom-header reverse-xs-order-2">
+          <div className="col-md-4 col-sm-12 col-xs-12 bottom-header order-2 order-md-1">
             <h3>Model Energy Monitor</h3>
             <p>
               AI models are driving a surge in data-center demand - but most
@@ -94,9 +94,9 @@ const VideoSection = () => {
               Play
             </button> */}
           </div>
-          <div className="col-md-8 col-sm-12 col-xs-12 reverse-xs-order-1">
+          <div className="col-md-8 col-sm-12 col-xs-12 order-1 order-md-2">
             <video
-              src={"https://carbonclarity.ai/assets/videos/datacenter_2.mp4"}
+              src={"https://carbonclarity.ai/assets/videos/datacenter_3.mp4"}
               autoPlay
               loop
               muted

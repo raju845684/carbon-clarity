@@ -24,15 +24,11 @@ const Stats = () => {
             </p>
             <div className="stats-container d-flex gap-4">
               <div className="stats-item">
-                <h3>
-                  {inView && <CountUp start={0} end={27} duration={2} />} %
-                </h3>
+                <h3>27 %</h3>
                 <strong>Onsite Power</strong>
               </div>
               <div className="stats-item">
-                <h3>
-                  {inView && <CountUp start={0} end={30} duration={2} />} %
-                </h3>
+                <h3>30 %</h3>
                 <strong>Model Waste</strong>
               </div>
             </div>

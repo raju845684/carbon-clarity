@@ -223,50 +223,51 @@ const ContactForm = () => {
     company: "",
     message: "",
   });
+
+  console.log(formData);
+
   const [errors, setErrors] = useState({});
-
-  // Memoize country list to prevent unnecessary re-renders
-  const countryList = useMemo(() => getCountryList(), []);
-
-  // State for dropdown visibility and search
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-
-  // Ref for dropdown container to handle outside clicks
   const dropdownRef = useRef(null);
-
-  // State for country with default set to the first country in the list
   const [country, setCountry] = useState(() => {
-    // Try to use the initial country from the list, default to first if not found
     const initialCountry =
-      countryList.find((c) => c.code === "US") || countryList[0];
+      getCountryList().find((c) => c.code === "US") || getCountryList()[0];
     return initialCountry.code;
   });
+  const [isCountryManuallySelected, setIsCountryManuallySelected] =
+    useState(false);
 
-  // Find country by code or dial code
+  const countryList = useMemo(() => getCountryList(), []);
+
   const findCountry = useCallback(
-    (input) => {
-      // Try to find by country code
+    (input, currentCountry) => {
       let foundCountry = countryList.find((c) => c.code === input);
-
-      // If not found, try to find by dial code
-      if (!foundCountry) {
+      if (!foundCountry && input) {
+        // Check if the current country's dial code matches
+        const currentCountryDetails = countryList.find(
+          (c) => c.code === currentCountry
+        );
+        if (
+          currentCountryDetails &&
+          input.startsWith(currentCountryDetails.dialCode)
+        ) {
+          return currentCountry; // Retain current country if dial code matches
+        }
+        // Otherwise, find by dial code
         foundCountry = countryList.find((c) => input.startsWith(c.dialCode));
       }
-
       return foundCountry ? foundCountry.code : countryList[0].code;
     },
     [countryList]
   );
 
-  // Handle outside click to close dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -275,13 +276,10 @@ const ContactForm = () => {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-
     setFormData((prevState) => ({
       ...prevState,
       [id]: value,
     }));
-
-    // Clear specific error when input becomes valid
     if (errors[id]) {
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
@@ -297,17 +295,15 @@ const ContactForm = () => {
       phone: value || "",
     }));
 
-    // Try to auto-detect country from phone number
-    try {
-      if (value) {
-        const detectedCountry = findCountry(value);
+    if (!isCountryManuallySelected && value) {
+      try {
+        const detectedCountry = findCountry(value, country);
         setCountry(detectedCountry);
+      } catch (error) {
+        console.log("Phone number parsing error:", error);
       }
-    } catch (error) {
-      console.log("Phone number parsing error:", error);
     }
 
-    // Clear phone error if the new value is valid
     if (errors.phone) {
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
@@ -318,18 +314,16 @@ const ContactForm = () => {
   };
 
   const handleCountryChange = (selectedCountry) => {
-    console.log("Selected Country:", selectedCountry);
     setCountry(selectedCountry || countryList[0].code);
+    setIsCountryManuallySelected(true); // Mark country as manually selected
     setIsDropdownOpen(false);
     setSearchTerm("");
   };
 
-  // Get the current country details
   const currentCountryDetails = useMemo(() => {
     return countryList.find((c) => c.code === country) || countryList[0];
   }, [country, countryList]);
 
-  // Filtered countries based on search term
   const filteredCountries = useMemo(() => {
     return countryList.filter(
       (c) =>
@@ -341,13 +335,8 @@ const ContactForm = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
-    // Validation rules
     const validationRules = {
-      name: {
-        required: true,
-        message: "Name is required",
-      },
+      name: { required: true, message: "Name is required" },
       email: {
         required: true,
         regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -355,39 +344,21 @@ const ContactForm = () => {
       },
       phone: {
         required: true,
-        validate: (value) => {
-          // Check if the phone number is valid using libphonenumber-js
-          return value && isValidPhoneNumber(value);
-        },
+        validate: (value) => value && isValidPhoneNumber(value),
         message: "Please enter a valid international phone number",
       },
-      company: {
-        required: true,
-        message: "Company is required",
-      },
-      message: {
-        required: true,
-        message: "Message is required",
-      },
+      company: { required: true, message: "Company is required" },
+      message: { required: true, message: "Message is required" },
     };
 
-    // Validate each field
     Object.keys(validationRules).forEach((field) => {
       const rule = validationRules[field];
       const value = formData[field].trim();
-
-      // Check if field is required
       if (rule.required && !value) {
         newErrors[field] = rule.message;
-      }
-      // Custom validation for phone number
-      else if (field === "phone" && value) {
-        if (!rule.validate(formData.phone)) {
-          newErrors[field] = rule.message;
-        }
-      }
-      // Check regex if it exists and value is not empty
-      else if (rule.regex && value && !rule.regex.test(value)) {
+      } else if (field === "phone" && value && !rule.validate(formData.phone)) {
+        newErrors[field] = rule.message;
+      } else if (rule.regex && value && !rule.regex.test(value)) {
         newErrors[field] = rule.message;
       }
     });
@@ -398,11 +369,8 @@ const ContactForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (validateForm()) {
-      // Form is valid, proceed with submission
       console.log("Form submitted:", formData);
-      // Here you would typically send the form data to a backend service
       alert("Form submitted successfully!");
     } else {
       console.log("Form has errors");
