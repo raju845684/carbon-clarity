@@ -8,8 +8,11 @@ import React, {
 import PhoneInput from "react-phone-number-input/input";
 import "react-phone-number-input/style.css";
 import { isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js/core";
+import metadata from "libphonenumber-js/metadata.min.json";
 import en from "react-phone-number-input/locale/en.json";
 import "flag-icons/css/flag-icons.min.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Comprehensive list of country codes with names and dial codes
 const getCountryList = () => {
@@ -217,18 +220,19 @@ const getCountryList = () => {
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    message: "",
+    firstName: "",
+    lastName: "",
+    emailAddress: "",
+    phoneNumber: "",
+    description: "",
+    cCompany: "",
   });
-
-  console.log(formData);
 
   const [errors, setErrors] = useState({});
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const dropdownRef = useRef(null);
   const [country, setCountry] = useState(() => {
     const initialCountry =
@@ -292,7 +296,7 @@ const ContactForm = () => {
   const handlePhoneChange = (value) => {
     setFormData((prevState) => ({
       ...prevState,
-      phone: value || "",
+      phoneNumber: value || "",
     }));
 
     if (!isCountryManuallySelected && value) {
@@ -304,10 +308,10 @@ const ContactForm = () => {
       }
     }
 
-    if (errors.phone) {
+    if (errors.phoneNumber) {
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
-        delete newErrors.phone;
+        delete newErrors.phoneNumber;
         return newErrors;
       });
     }
@@ -336,19 +340,19 @@ const ContactForm = () => {
   const validateForm = () => {
     const newErrors = {};
     const validationRules = {
-      name: { required: true, message: "Name is required" },
-      email: {
+      firstName: { required: true, message: "First name is required" },
+      emailAddress: {
         required: true,
         regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         message: "Please enter a valid email address",
       },
-      phone: {
+      phoneNumber: {
         required: true,
-        validate: (value) => value && isValidPhoneNumber(value),
+        validate: (value) => value && isValidPhoneNumber(value, metadata),
         message: "Please enter a valid international phone number",
       },
-      company: { required: true, message: "Company is required" },
-      message: { required: true, message: "Message is required" },
+      cCompany: { required: true, message: "Company is required" },
+      description: { required: true, message: "Description is required" },
     };
 
     Object.keys(validationRules).forEach((field) => {
@@ -356,7 +360,11 @@ const ContactForm = () => {
       const value = formData[field].trim();
       if (rule.required && !value) {
         newErrors[field] = rule.message;
-      } else if (field === "phone" && value && !rule.validate(formData.phone)) {
+      } else if (
+        field === "phoneNumber" &&
+        value &&
+        !rule.validate(formData.phoneNumber)
+      ) {
         newErrors[field] = rule.message;
       } else if (rule.regex && value && !rule.regex.test(value)) {
         newErrors[field] = rule.message;
@@ -367,185 +375,323 @@ const ContactForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      console.log("Form submitted:", formData);
-      alert("Form submitted successfully!");
-    } else {
+    setSubmitError("");
+
+    if (!validateForm()) {
       console.log("Form has errors");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(
+        "https://admin.carbonclarity.ai/api/v1/LeadCapture/c09d88ece0c2461dcc2c1e9da7213c1b",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (response.ok) {
+        // Try simple toast first
+        toast("Thank you for your interest! We'll get back to you soon.", {
+          type: "success",
+          position: "top-right",
+        });
+        setFormData({
+          firstName: "",
+          emailAddress: "",
+          phoneNumber: "",
+          description: "",
+          cCompany: "",
+        });
+        setErrors({});
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          errorData.message || `Server error: ${response.status}`;
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        setSubmitError(errorMessage);
+      }
+    } catch (error) {
+      const errorMessage = "Network error. Please try again.";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      setSubmitError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="contact-form" id="request-demo">
-      <div className="container">
-        <div className="row">
-          <div className="col-md-4 col-sm-12 col-xs-12"></div>
-          <div className="col-md-8 col-sm-12 col-xs-12">
-            <div className="contact-form-container">
-              <h2>Schedule a demo</h2>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipiscing elit tortor eu
-                dolorol egestas morbi sem vulputate etiam facilisis pellentesque
-                ut quis.
-              </p>
-              <form onSubmit={handleSubmit}>
-                <div className="row">
-                  <div className="col-md-6 col-sm-12 col-xs-12">
-                    <div className="form-group">
-                      <label htmlFor="name">Name</label>
-                      <input
-                        type="text"
-                        className={`form-control ${
-                          errors.name ? "is-invalid" : ""
-                        }`}
-                        id="name"
-                        placeholder="John Carter"
-                        value={formData.name}
-                        onChange={handleChange}
-                      />
-                      {errors.name && (
-                        <div className="invalid-feedback">{errors.name}</div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="col-md-6 col-sm-12 col-xs-12">
-                    <div className="form-group">
-                      <label htmlFor="email">Email</label>
-                      <input
-                        type="email"
-                        className={`form-control ${
-                          errors.email ? "is-invalid" : ""
-                        }`}
-                        id="email"
-                        placeholder="john@carter.com"
-                        value={formData.email}
-                        onChange={handleChange}
-                      />
-                      {errors.email && (
-                        <div className="invalid-feedback">{errors.email}</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6 col-sm-12 col-xs-12">
-                    <div
-                      className="form-group phone-input-container position-relative"
-                      ref={dropdownRef}
-                    >
-                      <label htmlFor="phone">Phone Number</label>
-                      <div className="input-group">
-                        <div className="input-group-prepend">
-                          <div
-                            className="input-group-text p-0 position-relative"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                          >
-                            <i
-                              className={`fi fi-${country.toLowerCase()} m-2`}
-                              style={{ width: "24px", height: "18px" }}
-                            />
-                          </div>
-                        </div>
-                        <PhoneInput
-                          labels={en}
-                          countries={countryList.map((c) => c.code)}
-                          country={country}
-                          international
-                          withCountryCallingCode
-                          value={formData.phone}
-                          onChange={handlePhoneChange}
+    <>
+      <style>
+        {`
+          .Toastify__toast-container {
+            z-index: 9999 !important;
+            position: fixed !important;
+            top: 20px !important;
+            right: 20px !important;
+          }
+          .Toastify__toast {
+            font-family: inherit !important;
+            background: #28a745 !important;
+            color: white !important;
+          }
+          .Toastify__toast--success {
+            background: #28a745 !important;
+          }
+        `}
+      </style>
+      <div className="contact-form" id="request-demo">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-4 col-sm-12 col-xs-12"></div>
+            <div className="col-md-8 col-sm-12 col-xs-12">
+              <div className="contact-form-container">
+                <h2>Schedule a demo</h2>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipiscing elit tortor
+                  eu dolorol egestas morbi sem vulputate etiam facilisis
+                  pellentesque ut quis.
+                </p>
+
+                <form onSubmit={handleSubmit}>
+                  <div className="row">
+                    <div className="col-md-6 col-sm-12 col-xs-12">
+                      <div className="form-group">
+                        <label htmlFor="firstName">First Name</label>
+                        <input
+                          type="text"
                           className={`form-control ${
-                            errors.phone ? "is-invalid" : ""
+                            errors.firstName ? "is-invalid" : ""
                           }`}
-                          id="phone"
-                          placeholder={`${currentCountryDetails.dialCode} Phone Number`}
+                          id="firstName"
+                          placeholder="John Carter"
+                          value={formData.firstName}
+                          onChange={handleChange}
+                          disabled={isSubmitting}
                         />
+                        {errors.firstName && (
+                          <div className="invalid-feedback">
+                            {errors.firstName}
+                          </div>
+                        )}
                       </div>
-                      {isDropdownOpen && (
-                        <div
-                          className="dropdown-menu show position-absolute"
-                          style={{
-                            maxHeight: "300px",
-                            overflowY: "auto",
-                            width: "100%",
-                            zIndex: 1000,
-                          }}
-                        >
-                          <input
-                            type="text"
-                            className="form-control mb-2"
-                            placeholder="Search countries..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                          />
-                          {filteredCountries.map((c) => (
-                            <button
-                              key={c.code}
-                              className="dropdown-item d-flex align-items-center"
-                              onClick={() => handleCountryChange(c.code)}
+                    </div>
+                    <div className="col-md-6 col-sm-12 col-xs-12">
+                      <div className="form-group">
+                        <label htmlFor="emailAddress">Email</label>
+                        <input
+                          type="email"
+                          className={`form-control ${
+                            errors.emailAddress ? "is-invalid" : ""
+                          }`}
+                          id="emailAddress"
+                          placeholder="john@carter.com"
+                          value={formData.emailAddress}
+                          onChange={handleChange}
+                          disabled={isSubmitting}
+                        />
+                        {errors.emailAddress && (
+                          <div className="invalid-feedback">
+                            {errors.emailAddress}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6 col-sm-12 col-xs-12">
+                      <div
+                        className="form-group phone-input-container position-relative"
+                        ref={dropdownRef}
+                      >
+                        <label htmlFor="phoneNumber">Phone Number</label>
+                        <div className="input-group">
+                          <div className="input-group-prepend">
+                            <div
+                              className="input-group-text p-0 position-relative"
+                              style={{
+                                cursor: isSubmitting
+                                  ? "not-allowed"
+                                  : "pointer",
+                              }}
+                              onClick={() =>
+                                !isSubmitting &&
+                                setIsDropdownOpen(!isDropdownOpen)
+                              }
                             >
                               <i
-                                className={`fi fi-${c.code.toLowerCase()} mr-2`}
-                              ></i>
-                              <span className="ml-auto text-muted">
-                                {c.dialCode}
-                              </span>
-                              <span className="ml-auto">{c.name}</span>
-                            </button>
-                          ))}
+                                className={`fi fi-${country.toLowerCase()} m-2`}
+                                style={{ width: "24px", height: "18px" }}
+                              />
+                            </div>
+                          </div>
+                          <PhoneInput
+                            labels={en}
+                            countries={countryList.map((c) => c.code)}
+                            country={country}
+                            international
+                            withCountryCallingCode
+                            value={formData.phoneNumber}
+                            onChange={handlePhoneChange}
+                            className={`form-control ${
+                              errors.phoneNumber ? "is-invalid" : ""
+                            }`}
+                            id="phoneNumber"
+                            placeholder={`${currentCountryDetails.dialCode} Phone Number`}
+                            disabled={isSubmitting}
+                          />
                         </div>
-                      )}
-                      {errors.phone && (
-                        <div className="invalid-feedback">{errors.phone}</div>
-                      )}
+                        {isDropdownOpen && !isSubmitting && (
+                          <div
+                            className="dropdown-menu show position-absolute"
+                            style={{
+                              maxHeight: "300px",
+                              overflowY: "auto",
+                              width: "100%",
+                              zIndex: 999999,
+                            }}
+                          >
+                            <input
+                              type="text"
+                              className="form-control mb-2"
+                              placeholder="Search countries..."
+                              value={searchTerm}
+                              onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            {filteredCountries.map((c) => (
+                              <button
+                                key={c.code}
+                                className="dropdown-item d-flex align-items-center"
+                                onClick={() => handleCountryChange(c.code)}
+                              >
+                                <i
+                                  className={`fi fi-${c.code.toLowerCase()} mr-2`}
+                                ></i>
+                                <span className="ml-auto text-muted">
+                                  {c.dialCode}
+                                </span>
+                                <span className="ml-auto">{c.name}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                        {errors.phoneNumber && (
+                          <div className="invalid-feedback">
+                            {errors.phoneNumber}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-md-6 col-sm-12 col-xs-12">
+                      <div className="form-group">
+                        <label htmlFor="cCompany">Company</label>
+                        <input
+                          type="text"
+                          className={`form-control ${
+                            errors.cCompany ? "is-invalid" : ""
+                          }`}
+                          id="cCompany"
+                          placeholder="Facebook"
+                          value={formData.cCompany}
+                          onChange={handleChange}
+                          disabled={isSubmitting}
+                        />
+                        {errors.cCompany && (
+                          <div className="invalid-feedback">
+                            {errors.cCompany}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                  <div className="col-md-6 col-sm-12 col-xs-12">
-                    <div className="form-group">
-                      <label htmlFor="company">Company</label>
-                      <input
-                        type="text"
-                        className={`form-control ${
-                          errors.company ? "is-invalid" : ""
-                        }`}
-                        id="company"
-                        placeholder="Facebook"
-                        value={formData.company}
-                        onChange={handleChange}
-                      />
-                      {errors.company && (
-                        <div className="invalid-feedback">{errors.company}</div>
-                      )}
-                    </div>
+                  <div className="form-group col-md-12 col-sm-12 col-xs-12">
+                    <label htmlFor="description">Leave us a message</label>
+                    <textarea
+                      className={`form-control ${
+                        errors.description ? "is-invalid" : ""
+                      }`}
+                      id="description"
+                      placeholder="Please type your message here..."
+                      value={formData.description}
+                      onChange={handleChange}
+                      disabled={isSubmitting}
+                      rows="4"
+                    />
+                    {errors.description && (
+                      <div className="invalid-feedback">
+                        {errors.description}
+                      </div>
+                    )}
                   </div>
-                </div>
-                <div className="form-group col-md-12 col-sm-12 col-xs-12">
-                  <label htmlFor="message">Leave us a message</label>
-                  <textarea
-                    className={`form-control ${
-                      errors.message ? "is-invalid" : ""
-                    }`}
-                    id="message"
-                    placeholder="Please type your message here..."
-                    value={formData.message}
-                    onChange={handleChange}
-                  />
-                  {errors.message && (
-                    <div className="invalid-feedback">{errors.message}</div>
+
+                  {submitError && (
+                    <div className="alert alert-danger" role="alert">
+                      {submitError}
+                    </div>
                   )}
-                </div>
-                <button type="submit" className="btn btn-primary">
-                  Send message
-                </button>
-              </form>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                        Submitting...
+                      </>
+                    ) : (
+                      "Send message"
+                    )}
+                  </button>
+
+                  {/* Test Toast Button - Remove this after testing */}
+                  {/* <button
+                    type="button"
+                    className="btn btn-secondary ms-2"
+                    onClick={() => {
+                      console.log("Testing toast...");
+                      toast.success("Test toast is working!", {
+                        position: "top-right",
+                        autoClose: 3000,
+                      });
+                    }}
+                  >
+                    Test Toast
+                  </button> */}
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

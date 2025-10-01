@@ -193,7 +193,7 @@
   .position-relative > i {
     margin: 3px !important;
   }
-  .contact-form-container form .form-group input#phone {
+  .contact-form-container form .form-group input#phoneNumber {
     padding-left: 54px !important;
   }
   .contact-form-container form {

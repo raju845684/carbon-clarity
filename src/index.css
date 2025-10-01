@@ -369,7 +369,7 @@ html {
   color: #adabc3;
   background-color: #ffffff;
 }
-.contact-form-container form .form-group input#phone {
+.contact-form-container form .form-group input#phoneNumber {
   padding-left: 60px !important;
 }
 .contact-form-container form .form-group textarea {
@@ -993,7 +993,7 @@ html {
 }
 .bg-body-tertiary.navbar.navbar-expand-lg.navbar-light {
   position: fixed;
-  z-index: 999999;
+  z-index: 9;
   width: 100%;
   background-color: #ffffff !important;
   border-bottom: 1px solid #e5e5e5 !important;
