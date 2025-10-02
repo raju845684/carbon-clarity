@@ -11,8 +11,6 @@ import { isValidPhoneNumber, parsePhoneNumber } from "libphonenumber-js/core";
 import metadata from "libphonenumber-js/metadata.min.json";
 import en from "react-phone-number-input/locale/en.json";
 import "flag-icons/css/flag-icons.min.css";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 // Comprehensive list of country codes with names and dial codes
 const getCountryList = () => {
@@ -232,6 +230,7 @@ const ContactForm = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const dropdownRef = useRef(null);
   const [country, setCountry] = useState(() => {
@@ -399,11 +398,7 @@ const ContactForm = () => {
       );
 
       if (response.ok) {
-        // Try simple toast first
-        toast("Thank you for your interest! We'll get back to you soon.", {
-          type: "success",
-          position: "top-right",
-        });
+        setIsSubmitted(true);
         setFormData({
           firstName: "",
           emailAddress: "",
@@ -416,26 +411,10 @@ const ContactForm = () => {
         const errorData = await response.json().catch(() => ({}));
         const errorMessage =
           errorData.message || `Server error: ${response.status}`;
-        toast.error(errorMessage, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
         setSubmitError(errorMessage);
       }
     } catch (error) {
       const errorMessage = "Network error. Please try again.";
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
       setSubmitError(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -443,38 +422,20 @@ const ContactForm = () => {
   };
 
   return (
-    <>
-      <style>
-        {`
-          .Toastify__toast-container {
-            z-index: 9999 !important;
-            position: fixed !important;
-            top: 20px !important;
-            right: 20px !important;
-          }
-          .Toastify__toast {
-            font-family: inherit !important;
-            background: #28a745 !important;
-            color: white !important;
-          }
-          .Toastify__toast--success {
-            background: #28a745 !important;
-          }
-        `}
-      </style>
-      <div className="contact-form" id="request-demo">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-4 col-sm-12 col-xs-12"></div>
-            <div className="col-md-8 col-sm-12 col-xs-12">
-              <div className="contact-form-container">
-                <h2>Schedule a demo</h2>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipiscing elit tortor
-                  eu dolorol egestas morbi sem vulputate etiam facilisis
-                  pellentesque ut quis.
-                </p>
+    <div className="contact-form" id="request-demo">
+      <div className="container">
+        <div className="row">
+          <div className="col-md-4 col-sm-12 col-xs-12"></div>
+          <div className="col-md-8 col-sm-12 col-xs-12">
+            <div className="contact-form-container">
+              <h2>Schedule a demo</h2>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipiscing elit tortor eu
+                dolorol egestas morbi sem vulputate etiam facilisis pellentesque
+                ut quis.
+              </p>
 
+              {!isSubmitted ? (
                 <form onSubmit={handleSubmit}>
                   <div className="row">
                     <div className="col-md-6 col-sm-12 col-xs-12">
@@ -670,28 +631,88 @@ const ContactForm = () => {
                       "Send message"
                     )}
                   </button>
-
-                  {/* Test Toast Button - Remove this after testing */}
-                  {/* <button
-                    type="button"
-                    className="btn btn-secondary ms-2"
-                    onClick={() => {
-                      console.log("Testing toast...");
-                      toast.success("Test toast is working!", {
-                        position: "top-right",
-                        autoClose: 3000,
-                      });
+                </form>
+              ) : (
+                <div className="success-message text-center py-5">
+                  <div className="success-icon mb-4">
+                    <div
+                      style={{
+                        width: "80px",
+                        height: "80px",
+                        borderRadius: "50%",
+                        border: "3px solid #28a745",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        margin: "0 auto",
+                        backgroundColor: "#f8f9fa",
+                      }}
+                    >
+                      <svg
+                        width="40"
+                        height="40"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style={{ color: "#28a745" }}
+                      >
+                        <path
+                          d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3
+                    style={{
+                      color: "#28a745",
+                      marginBottom: "1rem",
+                      fontSize: "1.5rem",
                     }}
                   >
-                    Test Toast
-                  </button> */}
-                </form>
-              </div>
+                    Form submitted successfully!
+                  </h3>
+                  <p
+                    style={{
+                      marginBottom: "1rem",
+                      fontWeight: "500",
+                      color: "#5e5a87",
+                    }}
+                  >
+                    Thank you! The form has been submitted successfully.
+                  </p>
+                  <p
+                    style={{
+                      marginBottom: "2rem",
+                      fontWeight: "500",
+                      color: "#5e5a87",
+                    }}
+                  >
+                    We will reply to you soon!
+                  </p>
+                  <button
+                    className="btn btn-outline-primary"
+                    onClick={() => setIsSubmitted(false)}
+                    style={{
+                      color: "#ffffff",
+                      borderColor: "#5e5a87",
+                      textDecoration: "none",
+                      background: "none",
+                      border: "1px solid #5e5a87",
+                      padding: "8px 16px",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      backgroundColor: "#5e5a87",
+                    }}
+                  >
+                    Go back
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

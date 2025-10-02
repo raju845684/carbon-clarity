@@ -46,7 +46,7 @@ const VideoSection = () => {
           <div className="col-md-4 col-sm-12 col-xs-12"></div>
           <div className="col-md-8 col-sm-12 col-xs-12">
             <video
-              src={"https://carbonclarity.ai/assets/videos/datacenter_1.mp4"}
+              src={"https://carbonclarity.ai/assets/videos/datacenter_3.mp4"}
               autoPlay
               loop
               muted
@@ -96,7 +96,7 @@ const VideoSection = () => {
           </div>
           <div className="col-md-8 col-sm-12 col-xs-12 order-1 order-md-2">
             <video
-              src={"https://carbonclarity.ai/assets/videos/datacenter_3.mp4"}
+              src={"https://carbonclarity.ai/assets/videos/datacenter_2.mp4"}
               autoPlay
               loop
               muted
