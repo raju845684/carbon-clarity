@@ -225,6 +225,9 @@ const ContactForm = () => {
     description: "",
     cCompany: "",
   });
+  const [displayName, setDisplayName] = useState("");
+
+  console.log(formData);
 
   const [errors, setErrors] = useState({});
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -277,12 +280,49 @@ const ContactForm = () => {
     };
   }, []);
 
+  // Function to split full name into firstName and lastName
+  const splitFullName = (fullName) => {
+    if (!fullName || fullName.trim() === "") {
+      return { firstName: "", lastName: "" };
+    }
+
+    // Remove everything after comma or hyphen
+    const cleanedName = fullName.split(/[,,-]/)[0].trim();
+    
+    // Split by spaces
+    const nameParts = cleanedName.split(/\s+/).filter(part => part.length > 0);
+    
+    if (nameParts.length === 0) {
+      return { firstName: "", lastName: "" };
+    } else if (nameParts.length === 1) {
+      return { firstName: nameParts[0], lastName: "" };
+    } else {
+      // First word is firstName, last word is lastName
+      const firstName = nameParts[0];
+      const lastName = nameParts[nameParts.length - 1];
+      return { firstName, lastName };
+    }
+  };
+
   const handleChange = (e) => {
     const { id, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
+    
+    // Special handling for firstName to split into firstName and lastName
+    if (id === "firstName") {
+      setDisplayName(value); // Keep the full name for display
+      const splitName = splitFullName(value);
+      setFormData((prevState) => ({
+        ...prevState,
+        firstName: splitName.firstName,
+        lastName: splitName.lastName,
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [id]: value,
+      }));
+    }
+    
     if (errors[id]) {
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
@@ -370,6 +410,11 @@ const ContactForm = () => {
       }
     });
 
+    // Check if lastName exists (since it's auto-generated from firstName)
+    if (!formData.lastName || formData.lastName.trim() === "") {
+      newErrors.firstName = "Please enter both first and last name";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -401,11 +446,13 @@ const ContactForm = () => {
         setIsSubmitted(true);
         setFormData({
           firstName: "",
+          lastName: "",
           emailAddress: "",
           phoneNumber: "",
           description: "",
           cCompany: "",
         });
+        setDisplayName("");
         setErrors({});
       } else {
         const errorData = await response.json().catch(() => ({}));
@@ -448,7 +495,7 @@ const ContactForm = () => {
                           }`}
                           id="firstName"
                           placeholder="John Carter"
-                          value={formData.firstName}
+                          value={displayName}
                           onChange={handleChange}
                           disabled={isSubmitting}
                         />

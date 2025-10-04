@@ -32,7 +32,7 @@ const VideoSection = () => {
     <div className="video-section">
       <div className="container">
         <div className="row">
-          <div className="col-md-8 col-sm-12 col-xs-12 top-header">
+          <div className="col-md-12 col-sm-12 col-xs-12 top-header">
             <h4>Amet minim mollit</h4>
             <h2>A fundamental shift in the power grid is happening</h2>
             <p>
@@ -43,7 +43,6 @@ const VideoSection = () => {
               link between their models and the energy they consume.
             </p>
           </div>
-          <div className="col-md-4 col-sm-12 col-xs-12"></div>
           <div className="col-md-8 col-sm-12 col-xs-12">
             <video
               src={"https://carbonclarity.ai/assets/videos/datacenter_3.mp4"}
